@@ -17,9 +17,11 @@
     <div class = "navbar">
       <div class = "navItem" id = "active"><a class = "nav-link" href="index.html">Home</a></div>
       <div class = "navItem" v-if = "user != null"><a class = "nav-link" href="profile.html">Profile</a></div>
+      <div class = "navItem" v-if = "user != null"><a class = "nav-link" href="newIdea.html">Share an Idea</a></div>
     </div>
     
     
+   
     
     <!--REGISTRATION POP UP-->
     <transition v-if="showForm" name="modal">
@@ -56,31 +58,65 @@
     
     <!--END OF REGISTRATION POP UP-->
     
-    
-    
-    <div class="content">
-      <form @submit.prevent="addIdea">
-        <input v-model="addedName" placeholder="Name"></p>
-        <textarea v-model="addedAbout"></textarea>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
+    <!--SUPPORTERS POP UP-->
+    <transition v-if="showSupporters" name="modal">
+      <div class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
 
-      <h3>Ideas</h3>
-      <div v-for="idea in ideas">
-        <hr>
-        <div class="idea">
-          <div class="about">
-            <p>{{idea.about}}</p>
-            <p><i>-- {{idea.name}}</i></p>
-          </div>
-          <div class="delete">
-            <button @click="deleteIdea(idea)" class="delete">Delete</button>
+            <div class="modal-header">
+              <h1 class="modal-title">Supporters</h1>
+            </div>
+            <div class="modal-body">
+              <li v-for="supporter in supporters">{{supporter}}</li>
+            </div>
+            <div class="modal-footer">
+              
+              <button @click="closeSupporters" type="button" class="close">Close</button>
+            </div>
           </div>
         </div>
       </div>
+    </transition>
+    <!--END OF SUPPORTERS POP UP-->
+    
+    
+    <div class="content">
+      <div class="recommended">
+        <h2>Ideas that fit your talents</h2>
+      </div>
+      
+      <div class="idea-list">
+        <h2>All Ideas</h2>
+        <div v-for="idea in ideas">
+          <hr>
+          <div class="idea-card">
+            <div class="about">
+              <p><b>{{idea.title}}</b></p>
+              <p>{{idea.about}}</p>
+              <p><i>-- {{idea.author}}</i></p>
+              <div id = "idea-skills-box">
+                <div v-for="skill in idea.skills" class = "skill-tab">
+                  {{skill}} 
+                </div>
+              </div>
+            </div>
+            <div class="delete">
+              <!--<button @click="deleteIdea(idea)" class="delete">Delete</button>-->
+              <button v-if = "user != null" @click="supportIdea(idea)" id="support-btn">Support</button>
+              <button id="view-btn" @click="toggleSupporters(idea)">View Supporters</button>
+              <!--<p v-else><a href="#" @click="toggleForm">Register or Login</a></p>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    
     </div>
+    
+    
   </div>
+  
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.7/vue.js" integrity="sha256-g+Q8DFAmG5+eyRPSydX0LY4TfjsL11XSDrIGerbbEdA=" crossorigin="anonymous"></script>
   <script src="/script.js"></script>

@@ -221,22 +221,5 @@ router.delete('/skill/:username/:skill', async (req, res) => {
   
 });
 
-// // delete a skill
-// router.delete('/skill/:username', async (req, res) => {
-//   console.log("USER");
-//   console.log(req.params.username);
-  
-//   const existingUser = await User.findOne({
-//       // username: req.body.user.username
-//       username: req.params.username
-//     });
-//   // const skill = req.body.skill;
-//   console.log(existingUser.skills);
-    
-//   existingUser.skills.splice( existingUser.skills.indexOf(skill), 1 );
-//   console.log(existingUser.skills);
-//   existingUser.save();
-//   return res.sendStatus(200);
-  
-// });
+
 module.exports = router;

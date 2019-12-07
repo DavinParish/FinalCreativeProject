@@ -249,3 +249,42 @@ button.close:hover {
   width: 20%;
   /*background-color:red;*/
 }
+
+
+
+#support-btn{
+  background-color: #0066cc;
+  border-radius: 15px;
+  color: white;
+}
+
+#view-btn{
+  background-color: #0066cc;
+  border-radius: 15px;
+  color: white;
+}
+
+.idea-card{
+  border-radius:10px;
+  margin:15px;
+}
+
+
+#idea-skills-box{
+  width: 100%;
+  display:flex;
+  flex-direction: row;
+}
+.skill-tab{
+  border-radius:30px;
+  background-color:#00ccff;
+  height:20px;
+  margin: 5px;
+  padding: 2px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display:flex;
+  justify-content: space-around;
+  
+  max-width: 250px;
+}

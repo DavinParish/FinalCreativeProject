@@ -5,17 +5,22 @@
 var app = new Vue({
   el: '#app',
   data: {
-    addedName: '',
+    addedTitle: '',
     addedSkill: '',
     addedAbout: '',
     ideas: {},
     showForm: false,
+    showSupporters: false,
     user: null,
     email: '',
     username: '',
     password: '',
     skills: [],
+    supporters: [],
     error: '',
+    neededSkills: [],
+    tempIdeaList: [],
+    
   },
   created() {
     this.getUser();
@@ -35,6 +40,28 @@ var app = new Vue({
         console.log(error);
       }
     },
+    async getUserIdeas() {
+      try {
+        let response = await axios.post("/api/ideas/userIdeas", {
+          author: this.user.username,
+        });
+        this.ideas = response.data.userIdeas;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getSupporters(idea) {
+      try {
+        let response = await axios.post("/api/ideas/support", {
+          idea: idea,
+        });
+        console.log("Supporters list");
+        console.log(response.data.supporters);
+        this.supporters = response.data.supporters;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getIdeas() {
       try {
         let response = await axios.get("/api/ideas");
@@ -44,14 +71,20 @@ var app = new Vue({
       }
     },
     async addIdea() {
+      console.log("SUBMITTING IDEA");
       try {
         let response = await axios.post("/api/ideas", {
-          name: this.addedName,
-          problem: this.addedProblem
+          username: this.user.username,
+          title: this.addedTitle,
+          about: this.addedAbout,
+          skills: this.neededSkills,
         });
-        this.addedName = "";
-        this.addedProblem = "";
-        this.getIdeas();
+        this.tempIdeaList.push(response.data);
+        this.addedTitle = "";
+        this.addedAbout = "";
+        this.neededSkills = [];
+        // this.getUserIdeas();
+        // this.neededSkills = [];
       } catch (error) {
         console.log(error);
       }
@@ -69,6 +102,18 @@ var app = new Vue({
       } catch (error) {
         console.log(error);
       }
+      
+    },
+    async addNeededSkill() {
+        this.neededSkills.push(this.addedSkill);
+        this.addedSkill = '';
+      
+    },
+    async deleteNeededSkill(skill) {
+      console.log("INDEX");
+      console.log(this.neededSkills.indexOf(skill));
+      console.log(this.neededSkills)
+      this.neededSkills.splice( this.neededSkills.indexOf(skill), 1 );
       
     },
     async deleteIdea(idea) {
@@ -91,14 +136,34 @@ var app = new Vue({
       }
       
     },
+    async supportIdea(idea) {
+      try {
+        let response = await axios.post("/api/ideas/support", {
+          idea: idea,
+          user: this.user,
+        });
+        // this.getSkills();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    
+    toggleForm(idea) {
+      this.getSupporters(idea)
+      this.showSupporters = !this.showSupporters;
+    },
     toggleForm() {
-      this.error = "";
-      this.username = "";
-      this.password = "";
+      this.getSupporters();
       this.showForm = !this.showForm;
+    },
+    clearTemp(){
+      this.tempIdeaList = [];
     },
     closeForm() {
       this.showForm = false;
+    },
+    closeSupporters(){
+      this.showSupporters = false;
     },
     async register() {
       this.error = "";

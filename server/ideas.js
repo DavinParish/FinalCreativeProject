@@ -7,8 +7,11 @@ const router = express.Router();
 //
 
 const ideaSchema = new mongoose.Schema({
-  name: String,
+  author: String,
+  title: String,
   about: String,
+  skills: [],
+  supporters: [],
 });
 
 const Idea = mongoose.model('Idea', ideaSchema);
@@ -23,10 +26,13 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 router.post('/', async (req, res) => {
   const idea = new Idea({
-    name: req.body.name,
+    author: req.body.username,
+    title: req.body.title,
     about: req.body.about,
+    skills: req.body.skills,
   });
   try {
     await idea.save();
@@ -48,5 +54,48 @@ router.delete('/:id', auth.verifyToken, async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
+// add supporter
+router.post('/support', async (req, res) => {
+  // console.log("USER");
+  // console.log(req.body.user);
+  // console.log(req.body.user.username);
+  const currentIdea = await Idea.findOne({
+      title: req.body.idea.title
+    });
+  console.log(currentIdea.supporters);
+    
+  currentIdea.supporters.push(req.body.username);
+  console.log(currentIdea.supporters);
+  currentIdea.save();
+  return res.sendStatus(200);
+  
+});
+
+router.get('/support', async (req, res) => {
+  try {
+    const currentIdea = await Idea.findOne({
+      title: req.body.idea.title
+    });
+    return res.send(currentIdea.supporters);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+});
+
+// Get the ideas that the ser has made
+router.get('/userIdeas', async (req, res) => {
+  try {
+    const userIdeas = await Idea.find({
+      author: req.body.author
+    });
+    return res.send(userIdeas.supporters);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+});
+
 
 module.exports = router;
