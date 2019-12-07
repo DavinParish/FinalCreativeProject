@@ -110,12 +110,17 @@ router.delete('/support/:ideaTitle/:supporter', async (req, res) => {
 });
 
 // Get the ideas that the ser has made
-router.get('/userIdeas', async (req, res) => {
+router.get('/userIdeas/:author', async (req, res) => {
+  console.log("AUTHOR");
+  console.log(req.params.author);
+  
   try {
     const userIdeas = await Idea.find({
-      author: req.body.author
+      author: req.params.author
     });
-    return res.send(userIdeas.supporters);
+    console.log("THE USERS IDEAS");
+    console.log(userIdeas);
+    return res.send(userIdeas);
   } catch (error) {
     console.log(error);
     return res.sendStatus(500);

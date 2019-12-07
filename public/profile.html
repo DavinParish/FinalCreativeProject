@@ -23,6 +23,7 @@
 
     <div class="content" onLoad="getUsers()">
         <div v-if="user" id="personal-info">
+          <h2>Personal Information: </h2>
           <p>{{user.username}}</p>
           <p v-if="user.email">{{user.email}}</p>
           <!--<input v-model="email">-->
@@ -46,7 +47,7 @@
         
         <div id = "your-ideas" class = "content-box">
           <h2>Your Ideas</h2>
-          <div v-for="idea in ideas">
+          <div v-for="idea in userIdeas">
           <hr>
           <div class="idea-card">
             <div class="about">

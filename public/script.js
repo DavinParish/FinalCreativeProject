@@ -20,6 +20,7 @@ var app = new Vue({
     error: '',
     neededSkills: [],
     tempIdeaList: [],
+    userIdeas: [],
     currentIdea: String,
     users: {},
     
@@ -29,6 +30,7 @@ var app = new Vue({
     this.getIdeas();
     this.getSkills();
     this.getUsers();
+    this.getUserIdeas();
     
     
   },
@@ -52,11 +54,12 @@ var app = new Vue({
       }
     },
     async getUserIdeas() {
+      await this.getUser();
+      console.log("Get user ideas: ");
+      console.log(this.user.username);
       try {
-        let response = await axios.post("/api/ideas/userIdeas", {
-          author: this.user.username,
-        });
-        this.ideas = response.data.userIdeas;
+        let response = await axios.get("/api/ideas/userIdeas/" + this.user.username);
+        this.userIdeas = response.data;
       } catch (error) {
         console.log(error);
       }
@@ -243,6 +246,7 @@ var app = new Vue({
       try {
         let response = await axios.delete("/api/users");
         this.user = null;
+        this.userIdeas = [];
       } catch (error) {
         // don't worry about it
       }
