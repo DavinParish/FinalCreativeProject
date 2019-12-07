@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Arimo" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+  <title>Ideation</title>
+</head>
+
+<body>
+  <div id="app" @keydown.esc="closeForm">
+    <div class="header">
+      <h1>Ideation</h1>
+        <p v-if="user">Welcome {{user.username}}<br><a href="#" @click="logout">Logout</a></p>
+        <p v-else><a href="#" @click="toggleForm">Register or Login</a></p>
+    </div>
+    <div class = "navbar">
+      <div class = "navItem"><a class = "nav-link" href="index.html">Home</a></div>
+      <div class = "navItem" v-if = "user != null" id = "active"><a class = "nav-link" href="profile.html">Profile</a></div>
+    </div>
+
+    <div class="content">
+        <div class = "skillsBox">
+          <h2>Your Skills</h2>
+            <ul>
+                <li v-for="skill in skills" class = "skill">
+                    {{skill}}
+                    <button class = "delete-skill-btn" type="submit" @click= "deleteSkill(skill)">x</button>
+                </li>
+                
+            </ul>
+            
+        </div>
+        <input v-model="addedSkill" placeholder="Skill Name">
+        <button class = "add-skill-btn" type="submit" @click="addSkill()">+</button>
+      <!--<form @submit.prevent="addSkill">-->
+      <!--  <input v-model="addedSkill" placeholder="Skill Name"></p>-->
+      <!--  <button class = "add-skill-btn" type="submit">+</button>-->
+      <!--</form>-->
+
+    
+      </div>
+    </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.7/vue.js" integrity="sha256-g+Q8DFAmG5+eyRPSydX0LY4TfjsL11XSDrIGerbbEdA=" crossorigin="anonymous"></script>
+  <script src="/script.js"></script>
+</body>
+
+</html>
