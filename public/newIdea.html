@@ -18,6 +18,7 @@
           <div class = "navItem"><a class = "nav-link" href="index.html">Home</a></div>
           <div class = "navItem" v-if = "user != null" ><a class = "nav-link" href="profile.html">Profile</a></div>
           <div class = "navItem" v-if = "user != null" id = "active"><a class = "nav-link" href="newIdea.html">Share an Idea</a></div>
+          <div class = "navItem" v-if = "user != null && user.username == 'admin'"><a class = "nav-link" href="admin.html">Manage users</a></div>
         </div>
     
         <div class="content">

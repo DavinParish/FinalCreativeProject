@@ -18,6 +18,7 @@
       <div class = "navItem" id = "active"><a class = "nav-link" href="index.html">Home</a></div>
       <div class = "navItem" v-if = "user != null"><a class = "nav-link" href="profile.html">Profile</a></div>
       <div class = "navItem" v-if = "user != null"><a class = "nav-link" href="newIdea.html">Share an Idea</a></div>
+      <div class = "navItem" v-if = "user != null && user.username == 'admin'"><a class = "nav-link" href="admin.html">Manage users</a></div>
     </div>
     
     
@@ -67,8 +68,14 @@
             <div class="modal-header">
               <h1 class="modal-title">Supporters</h1>
             </div>
-            <div class="modal-body">
-              <li v-for="supporter in supporters">{{supporter}}</li>
+            <div class="modal-body" id = "supporters-list">
+              
+              <li v-for="supporter in supporters" >
+                
+                {{supporter.username}} -- {{supporter.email}}
+                <button class = "delete-skill-btn" @click= "removeSupporter(supporter)">x</button>
+              </li>
+              
             </div>
             <div class="modal-footer">
               

@@ -7,7 +7,7 @@
   <title>Ideation</title>
 </head>
 
-<body >
+<body>
   <div id="app" @keydown.esc="closeForm">
     <div class="header">
       <h1>Ideation</h1>
@@ -18,9 +18,18 @@
       <div class = "navItem"><a class = "nav-link" href="index.html">Home</a></div>
       <div class = "navItem" v-if = "user != null" id = "active"><a class = "nav-link" href="profile.html">Profile</a></div>
       <div class = "navItem" v-if = "user != null"><a class = "nav-link" href="newIdea.html">Share an Idea</a></div>
+      <div class = "navItem" v-if = "user != null && user.username == 'admin'"><a class = "nav-link" href="admin.html">Manage users</a></div>
     </div>
 
-    <div class="content">
+    <div class="content" onLoad="getUsers()">
+        <div v-if="user" id="personal-info">
+          <p>{{user.username}}</p>
+          <p v-if="user.email">{{user.email}}</p>
+          <!--<input v-model="email">-->
+          <!--<button @click="editEmail()" id = "view-btn">Save</button>-->
+          
+        </div>
+      
         <div id = "skillsBox" class = "content-box">
           <h2>Your Skills</h2>
             <ul>

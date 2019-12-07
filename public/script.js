@@ -20,12 +20,15 @@ var app = new Vue({
     error: '',
     neededSkills: [],
     tempIdeaList: [],
+    currentIdea: String,
+    users: {},
     
   },
   created() {
     this.getUser();
     this.getIdeas();
     this.getSkills();
+    this.getUsers();
     
     
   },
@@ -36,6 +39,14 @@ var app = new Vue({
         console.log("Skills list");
         console.log(response.data.skills);
         this.skills = response.data.skills;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getUsers() {
+      try {
+        let response = await axios.get("/api/users/userList");
+        this.users = response.data;
       } catch (error) {
         console.log(error);
       }
@@ -51,13 +62,25 @@ var app = new Vue({
       }
     },
     async getSupporters(idea) {
+      console.log("idea title");
+      console.log(idea.title);
       try {
-        let response = await axios.post("/api/ideas/support", {
-          idea: idea,
-        });
+        let response = await axios.get("/api/ideas/support/" + idea._id);
         console.log("Supporters list");
-        console.log(response.data.supporters);
-        this.supporters = response.data.supporters;
+        console.log(response.data);
+        console.log(response);
+        this.supporters = response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getEmail(supporter) {
+      console.log("GETTING THE EMAIL");
+      try {
+        let response = await axios.get("/api/users/" + supporter);
+        console.log("EMAIL: " + response.data);
+        // this.email = response.data;
+        return response.data;
       } catch (error) {
         console.log(error);
       }
@@ -124,7 +147,7 @@ var app = new Vue({
         this.toggleForm();
       }
     },
-     async deleteSkill(skill) {
+    async deleteSkill(skill) {
       console.log("user");
       console.log(this.user);
       console.log(skill);
@@ -134,9 +157,29 @@ var app = new Vue({
       } catch (error) {
         console.log(error);
       }
-      
+    },
+    async deleteUser(user) {
+      console.log("user");
+      console.log(user._id);
+      try {
+        let response = await axios.delete("/api/users/" + user._id);
+        this.getUsers();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async removeSupporter(supporter) {
+      console.log("supporter");
+      console.log(supporter);
+      try {
+        let response = await axios.delete("/api/ideas/support/" + this.currentIdea +"/ "+ supporter);
+        this.supporters = response.data;
+      } catch (error) {
+        console.log(error);
+      }
     },
     async supportIdea(idea) {
+      console.log("script: ADDING SUPPORTER");
       try {
         let response = await axios.post("/api/ideas/support", {
           idea: idea,
@@ -148,8 +191,9 @@ var app = new Vue({
       }
     },
     
-    toggleForm(idea) {
-      this.getSupporters(idea)
+    toggleSupporters(idea) {
+      this.getSupporters(idea);
+      this.currentIdea = idea.title;
       this.showSupporters = !this.showSupporters;
     },
     toggleForm() {
@@ -170,7 +214,8 @@ var app = new Vue({
       try {
         let response = await axios.post("/api/users", {
           username: this.username,
-          password: this.password
+          password: this.password,
+          email: this.email,
         });
         this.user = response.data;
         // close the dialog
@@ -184,7 +229,8 @@ var app = new Vue({
       try {
         let response = await axios.post("/api/users/login", {
           username: this.username,
-          password: this.password
+          password: this.password,
+          email: this.email,
         });
         this.user = response.data;
         // close the dialog
@@ -207,6 +253,23 @@ var app = new Vue({
         this.user = response.data;
       } catch (error) {
         // Not logged in. That's OK!
+      }
+    },
+    async editEmail() {
+      console.log("EDIT EMAIL");
+      console.log(this.user);
+      console.log(this.user.email);
+      
+      try {
+        // let response = await axios.post("/api/users/" + this.user + "/" + this.email);
+        let response = await axios.post("/api/users/editEmail", {
+          username: this.user.username,
+          email: this.email,
+        });
+        // this.user = response.data;
+      } catch (error) {
+        // Not logged in. That's OK!
+        
       }
     },
   }

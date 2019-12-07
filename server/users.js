@@ -186,6 +186,13 @@ router.get('/', auth.verifyToken, async (req, res) => {
   return res.send(user);
 });
 
+
+// Get user List
+router.get('/userList', auth.verifyToken, async (req, res) => {
+  const userList = await User.find();
+  return res.send(userList);
+});
+
 // add skill
 router.post('/skill', async (req, res) => {
   // console.log("USER");
@@ -221,5 +228,47 @@ router.delete('/skill/:username/:skill', async (req, res) => {
   
 });
 
+
+// edit email
+router.post('/editEmail', async (req, res) => {
+  console.log("EDITING EMAIL");
+  console.log(req.body.user);
+  console.log(req.body.email);
+  
+  const currentUser = await User.findOne({
+      username: req.body.user,
+      email: req.body.email,
+    });
+  currentUser.email =  req.body.email; 
+  currentUser.save();
+  return res.sendStatus(200);
+  
+});
+
+// // Get email
+// router.get('/:supporter', auth.verifyToken, async (req, res) => {
+//   // look up user account
+//   const user = await User.findOne({
+//     name: req.params.supporter
+//   });
+  
+//   // console.log("CURRENT USER");
+//   // console.log(user);
+  
+//   return res.send(user.email);
+// });
+
+// delete a user
+router.delete('/:id', auth.verifyToken, async (req, res) => {
+  try {
+    await User.deleteOne({
+      _id: req.params.id
+    });
+    return res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+});
 
 module.exports = router;

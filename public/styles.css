@@ -263,6 +263,10 @@ button.close:hover {
   border-radius: 15px;
   color: white;
 }
+#view-btn:active{
+  background-color: #004d66;
+
+}
 
 .idea-card{
   border-radius:10px;
@@ -288,3 +292,18 @@ button.close:hover {
   
   max-width: 250px;
 }
+
+#support-btn:active{
+  background-color: #004d66;
+}
+
+#supporters-list{
+  overflow-y:auto;
+}
+
+#user-card{
+  margin:15px;
+  border-bottom: 1px solid black;
+  padding: 15px;
+}
+
