@@ -23,23 +23,59 @@ var app = new Vue({
     userIdeas: [],
     currentIdea: String,
     users: {},
+    recommendedIdeas: [],
     
   },
   created() {
     this.getUser();
     this.getIdeas();
-    this.getSkills();
-    this.getUsers();
-    this.getUserIdeas();
-    
+      this.getSkills();
+      this.getUsers();
+      this.getUserIdeas();
+      this.getRecommendedIdeas();
     
   },
   methods: {
+    async getRecommendedIdeas() {
+      await this.getUser();
+      try {
+        let response = await axios.get("/api/ideas");
+        let allIdeas = response.data;
+        let userSkills = this.user.skills;
+        // let response = await axios.get("/api/ideas/" + this.user.skills);
+        console.log("ALL IDEAS");
+        console.log(allIdeas);
+        console.log("USER SKILLS");
+        console.log(this.user.skills);
+        console.log("Length of all ideas: " + allIdeas.length);
+        
+        for(let i = 0; i < allIdeas.length; i++){
+          console.log("CURRENT IDEA");
+          let idea = allIdeas[i];
+          console.log(idea);
+          for(let k = 0; k < allIdeas[i].skills.length; k++){
+            let skill = allIdeas[i].skills[k]
+            for(let j = 0; j < userSkills.length; j++){
+              let userSkill = userSkills[j];
+              console.log("Comparing needed skill (" + skill + ") to user skill(" + userSkill +")");
+              if(skill == userSkill){
+                console.log("ITS A MATCH");
+                this.recommendedIdeas.push(idea);
+                break;
+              }
+            }
+          }
+        }
+        
+        console.log("RECCOMENDED");
+        console.log(this.recommendedIdeas);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getSkills() {
       try {
         let response = await axios.get("/api/users");
-        console.log("Skills list");
-        console.log(response.data.skills);
         this.skills = response.data.skills;
       } catch (error) {
         console.log(error);
@@ -55,8 +91,6 @@ var app = new Vue({
     },
     async getUserIdeas() {
       await this.getUser();
-      console.log("Get user ideas: ");
-      console.log(this.user.username);
       try {
         let response = await axios.get("/api/ideas/userIdeas/" + this.user.username);
         this.userIdeas = response.data;
@@ -65,24 +99,16 @@ var app = new Vue({
       }
     },
     async getSupporters(idea) {
-      console.log("idea title");
-      console.log(idea.title);
       try {
         let response = await axios.get("/api/ideas/support/" + idea._id);
-        console.log("Supporters list");
-        console.log(response.data);
-        console.log(response);
         this.supporters = response.data;
       } catch (error) {
         console.log(error);
       }
     },
     async getEmail(supporter) {
-      console.log("GETTING THE EMAIL");
       try {
         let response = await axios.get("/api/users/" + supporter);
-        console.log("EMAIL: " + response.data);
-        // this.email = response.data;
         return response.data;
       } catch (error) {
         console.log(error);
@@ -97,7 +123,12 @@ var app = new Vue({
       }
     },
     async addIdea() {
-      console.log("SUBMITTING IDEA");
+      if (this.addedTitle == "" || this.addedAbout == "") {
+          // alert("Name must be filled out");
+          document.getElementById("empty-idea-error").innerHTML = "Title and description are required";
+          return false;
+      }
+      document.getElementById("empty-idea-error").innerHTML = "";
       try {
         let response = await axios.post("/api/ideas", {
           username: this.user.username,
@@ -116,8 +147,12 @@ var app = new Vue({
       }
     },
     async addSkill() {
-      console.log(this.user);
-      console.log(this.addedSkill);
+        if (this.addedSkill == "") {
+          // alert("Name must be filled out");
+          document.getElementById("empty-skill-error").innerHTML = "Please fill out before submitting";
+          return false;
+        }
+        document.getElementById("empty-skill-error").innerHTML = "";
       try {
         let response = await axios.post("/api/users/skill", {
           skill: this.addedSkill,
@@ -131,16 +166,15 @@ var app = new Vue({
       
     },
     async addNeededSkill() {
+        if (this.addedSkill == "") {
+          return false;
+        }
         this.neededSkills.push(this.addedSkill);
         this.addedSkill = '';
       
     },
     async deleteNeededSkill(skill) {
-      console.log("INDEX");
-      console.log(this.neededSkills.indexOf(skill));
-      console.log(this.neededSkills)
       this.neededSkills.splice( this.neededSkills.indexOf(skill), 1 );
-      
     },
     async deleteIdea(idea) {
       try {
@@ -151,19 +185,14 @@ var app = new Vue({
       }
     },
     async deleteSkill(skill) {
-      console.log("user");
-      console.log(this.user);
-      console.log(skill);
       try {
-        let response = await axios.delete("/api/users/skill/" + this.user.username +"/ "+ skill);
+        let response = await axios.delete("/api/users/skill/" + this.user.username +"/"+ skill);
         this.getSkills();
       } catch (error) {
         console.log(error);
       }
     },
     async deleteUser(user) {
-      console.log("user");
-      console.log(user._id);
       try {
         let response = await axios.delete("/api/users/" + user._id);
         this.getUsers();
@@ -172,8 +201,6 @@ var app = new Vue({
       }
     },
     async removeSupporter(supporter) {
-      console.log("supporter");
-      console.log(supporter);
       try {
         let response = await axios.delete("/api/ideas/support/" + this.currentIdea +"/ "+ supporter);
         this.supporters = response.data;
@@ -182,7 +209,6 @@ var app = new Vue({
       }
     },
     async supportIdea(idea) {
-      console.log("script: ADDING SUPPORTER");
       try {
         let response = await axios.post("/api/ideas/support", {
           idea: idea,
@@ -195,6 +221,8 @@ var app = new Vue({
     },
     
     toggleSupporters(idea) {
+      console.log("TOGGLING SUPPORTERS");
+      console.log(this.showSupporters);
       this.getSupporters(idea);
       this.currentIdea = idea.title;
       this.showSupporters = !this.showSupporters;
@@ -247,6 +275,7 @@ var app = new Vue({
         let response = await axios.delete("/api/users");
         this.user = null;
         this.userIdeas = [];
+        window.location.href = "http://dev.davinparish.com:4210/index.html";
       } catch (error) {
         // don't worry about it
       }
@@ -260,10 +289,6 @@ var app = new Vue({
       }
     },
     async editEmail() {
-      console.log("EDIT EMAIL");
-      console.log(this.user);
-      console.log(this.user.email);
-      
       try {
         // let response = await axios.post("/api/users/" + this.user + "/" + this.email);
         let response = await axios.post("/api/users/editEmail", {

@@ -180,9 +180,6 @@ router.get('/', auth.verifyToken, async (req, res) => {
     return res.status(403).send({
       error: "must login"
     });
-  // console.log("CURRENT USER");
-  // console.log(user);
-  
   return res.send(user);
 });
 
@@ -195,16 +192,10 @@ router.get('/userList', auth.verifyToken, async (req, res) => {
 
 // add skill
 router.post('/skill', async (req, res) => {
-  // console.log("USER");
-  // console.log(req.body.user);
-  // console.log(req.body.user.username);
   const existingUser = await User.findOne({
       username: req.body.user.username
     });
-  console.log(existingUser.skills);
-    
   existingUser.skills.push(req.body.skill);
-  console.log(existingUser.skills);
   existingUser.save();
   return res.sendStatus(200);
   
@@ -213,16 +204,12 @@ router.post('/skill', async (req, res) => {
 
 // delete a skill
 router.delete('/skill/:username/:skill', async (req, res) => {
-  console.log("USER");
-  console.log(req.params.username);
-  console.log(req.params.skill);
-  
   const existingUser = await User.findOne({
       // username: req.body.user.username
       username: req.params.username
     });
   
-  existingUser.skills.splice( existingUser.skills.indexOf(req.params.skill), 1 );
+  existingUser.skills.splice(existingUser.skills.indexOf(req.params.skill), 1 );
   existingUser.save();
   return res.sendStatus(200);
   
@@ -231,10 +218,6 @@ router.delete('/skill/:username/:skill', async (req, res) => {
 
 // edit email
 router.post('/editEmail', async (req, res) => {
-  console.log("EDITING EMAIL");
-  console.log(req.body.user);
-  console.log(req.body.email);
-  
   const currentUser = await User.findOne({
       username: req.body.user,
       email: req.body.email,

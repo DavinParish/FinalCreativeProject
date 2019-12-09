@@ -91,6 +91,29 @@
     <div class="content">
       <div class="recommended">
         <h2>Ideas that fit your talents</h2>
+        <div class="idea-list">
+          <div v-for="idea in recommendedIdeas">
+            <hr>
+            <div class="idea-card">
+              <div class="about">
+                <p><b>{{idea.title}}</b></p>
+                <p>{{idea.about}}</p>
+                <p><i>-- {{idea.author}}</i></p>
+                <div id = "idea-skills-box">
+                  <div v-for="skill in idea.skills" class = "skill-tab">
+                    {{skill}} 
+                  </div>
+                </div>
+              </div>
+              <div class="delete">
+                <!--<button @click="deleteIdea(idea)" class="delete">Delete</button>-->
+                <button v-if = "user != null" @click="supportIdea(idea)" id="support-btn">Support</button>
+                <button id="view-btn" @click="toggleSupporters(idea)">View Supporters</button>
+                <!--<p v-else><a href="#" @click="toggleForm">Register or Login</a></p>-->
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       
       <div class="idea-list">
@@ -112,7 +135,6 @@
               <!--<button @click="deleteIdea(idea)" class="delete">Delete</button>-->
               <button v-if = "user != null" @click="supportIdea(idea)" id="support-btn">Support</button>
               <button id="view-btn" @click="toggleSupporters(idea)">View Supporters</button>
-              <!--<p v-else><a href="#" @click="toggleForm">Register or Login</a></p>-->
             </div>
           </div>
         </div>
