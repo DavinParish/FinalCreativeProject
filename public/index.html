@@ -90,7 +90,7 @@
     
     <div class="content">
       <div class="recommended">
-        <h2>Ideas that fit your talents</h2>
+        <h2 v-if = "user != null">Ideas that fit your talents</h2>
         <div class="idea-list">
           <div v-for="idea, index in recommendedIdeas" >
             <hr>
