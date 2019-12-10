@@ -24,18 +24,42 @@ var app = new Vue({
     currentIdea: String,
     users: {},
     recommendedIdeas: [],
+    filteredIdeas: {},
+    supported: false,
     
   },
   created() {
     this.getUser();
     this.getIdeas();
+    this.getFilteredIdeas();
       this.getSkills();
       this.getUsers();
       this.getUserIdeas();
       this.getRecommendedIdeas();
+      // window.addEventListener('beforeunload', this.handler);
     
   },
+  watch: {
+  
+  },
+  
   methods: {
+    
+    async getFilteredIdeas() {
+      console.log("GETTING FILTERED");
+      await this.getIdeas();
+      if(this.user != null){
+        await this.getUser();
+        let username = this.user.username;
+        this.filteredIdeas = this.ideas.filter(function(idea) {
+        return idea.author  != username;
+      });   
+      }
+      else{
+        this.filteredIdeas = this.ideas;
+      }
+      
+    },
     async getRecommendedIdeas() {
       await this.getUser();
       try {
@@ -43,32 +67,21 @@ var app = new Vue({
         let allIdeas = response.data;
         let userSkills = this.user.skills;
         // let response = await axios.get("/api/ideas/" + this.user.skills);
-        console.log("ALL IDEAS");
-        console.log(allIdeas);
-        console.log("USER SKILLS");
-        console.log(this.user.skills);
-        console.log("Length of all ideas: " + allIdeas.length);
-        
         for(let i = 0; i < allIdeas.length; i++){
-          console.log("CURRENT IDEA");
           let idea = allIdeas[i];
-          console.log(idea);
           for(let k = 0; k < allIdeas[i].skills.length; k++){
             let skill = allIdeas[i].skills[k]
             for(let j = 0; j < userSkills.length; j++){
               let userSkill = userSkills[j];
-              console.log("Comparing needed skill (" + skill + ") to user skill(" + userSkill +")");
+              // console.log("Comparing needed skill (" + skill + ") to user skill(" + userSkill +")");
               if(skill == userSkill){
-                console.log("ITS A MATCH");
+                // console.log("ITS A MATCH");
                 this.recommendedIdeas.push(idea);
                 break;
               }
             }
           }
         }
-        
-        console.log("RECCOMENDED");
-        console.log(this.recommendedIdeas);
       } catch (error) {
         console.log(error);
       }
@@ -99,6 +112,7 @@ var app = new Vue({
       }
     },
     async getSupporters(idea) {
+      console.log("GETTING SUPPORTERS");
       try {
         let response = await axios.get("/api/ideas/support/" + idea._id);
         this.supporters = response.data;
@@ -118,6 +132,7 @@ var app = new Vue({
       try {
         let response = await axios.get("/api/ideas");
         this.ideas = response.data;
+        
       } catch (error) {
         console.log(error);
       }
@@ -204,25 +219,76 @@ var app = new Vue({
       try {
         let response = await axios.delete("/api/ideas/support/" + this.currentIdea +"/ "+ supporter);
         this.supporters = response.data;
+        
       } catch (error) {
         console.log(error);
       }
     },
     async supportIdea(idea) {
+      // await this.getSupporters(idea);
       try {
         let response = await axios.post("/api/ideas/support", {
           idea: idea,
           user: this.user,
         });
+        this.getSupporters(idea);
         // this.getSkills();
       } catch (error) {
         console.log(error);
       }
     },
-    
+    async withdrawSupport(idea) {
+      // await this.getSupporters(idea);
+      try {
+        let response = await axios.delete("/api/ideas/support/" + idea.title +"/ "+ this.user);
+        this.supporters = response.data;
+        this.getSupporters(idea);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    checkIfSupported(idea, index){
+      this.getSupporters(idea);
+      console.log("CHECKING IF SUPPORTED ID: " + index);
+      this.supported = false;
+      for(let i = 0; i < this.supporters.length; i++){
+        if(this.supporters[i].username == this.user.username){
+          this.supported = true;
+        }
+      }
+      if(this.supported){
+        document.getElementById(index).innerHTML = "Support";
+        document.getElementById(index).className = "support-btn";
+        
+        
+      }
+      else{
+        document.getElementById(index).innerHTML = "Withdraw";
+        document.getElementById(index).className = "withdraw-btn";
+      }
+    },
+    checkBool(idea){
+      for(let i = 0; i < idea.supporters.length; i++){
+        if(idea.supporters[i].username == this.user.username){
+          return true;
+        }
+      }
+      return false;
+    },
+    toggleSupport(idea, index){
+      this.checkIfSupported(idea, index);
+      if(this.supported){
+        console.log("Withdrawing Support");
+        this.withdrawSupport(idea);
+      }
+      else{
+        console.log("Supporting");
+        this.supportIdea(idea);
+      }
+      // this.getSupporters(idea);
+      this.supported = !this.supported;
+    },
     toggleSupporters(idea) {
-      console.log("TOGGLING SUPPORTERS");
-      console.log(this.showSupporters);
       this.getSupporters(idea);
       this.currentIdea = idea.title;
       this.showSupporters = !this.showSupporters;
@@ -251,6 +317,7 @@ var app = new Vue({
         this.user = response.data;
         // close the dialog
         this.toggleForm();
+        this.getIdeas();
       } catch (error) {
         this.error = error.response.data.message;
       }
@@ -266,6 +333,9 @@ var app = new Vue({
         this.user = response.data;
         // close the dialog
         this.toggleForm();
+        this.getIdeas();
+        this.getFilteredIdeas();
+        this.getRecommendedIdeas();
       } catch (error) {
         this.error = error.response.data.message;
       }

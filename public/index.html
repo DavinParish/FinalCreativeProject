@@ -92,9 +92,9 @@
       <div class="recommended">
         <h2>Ideas that fit your talents</h2>
         <div class="idea-list">
-          <div v-for="idea in recommendedIdeas">
+          <div v-for="idea, index in recommendedIdeas" >
             <hr>
-            <div class="idea-card">
+            <div class="idea-card" onCreate = "checkIfSupported(idea)">
               <div class="about">
                 <p><b>{{idea.title}}</b></p>
                 <p>{{idea.about}}</p>
@@ -107,7 +107,12 @@
               </div>
               <div class="delete">
                 <!--<button @click="deleteIdea(idea)" class="delete">Delete</button>-->
-                <button v-if = "user != null" @click="supportIdea(idea)" id="support-btn">Support</button>
+                <button v-if = "user != null && checkBool(idea)" @click="toggleSupport(idea, index)" class="withdraw-btn" :id = "index">
+                  Withdraw
+                </button>
+                <button v-else-if = "user != null && !checkBool(idea)" @click="toggleSupport(idea, index)" class="support-btn" :id = "index">
+                  Support                
+                </button>
                 <button id="view-btn" @click="toggleSupporters(idea)">View Supporters</button>
                 <!--<p v-else><a href="#" @click="toggleForm">Register or Login</a></p>-->
               </div>
@@ -118,7 +123,7 @@
       
       <div class="idea-list">
         <h2>All Ideas</h2>
-        <div v-for="idea in ideas">
+        <div v-for="idea, index in filteredIdeas">
           <hr>
           <div class="idea-card">
             <div class="about">
@@ -128,12 +133,18 @@
               <div id = "idea-skills-box">
                 <div v-for="skill in idea.skills" class = "skill-tab">
                   {{skill}} 
+                  
                 </div>
               </div>
             </div>
             <div class="delete">
               <!--<button @click="deleteIdea(idea)" class="delete">Delete</button>-->
-              <button v-if = "user != null" @click="supportIdea(idea)" id="support-btn">Support</button>
+              <button v-if = "user != null && checkBool(idea)" @click="toggleSupport(idea, index + 'a')" class="withdraw-btn" :id = "index +'a'">
+                Withdraw
+              </button>
+              <button v-else-if = "user != null && !checkBool(idea)" @click="toggleSupport(idea, index + 'a')" class="support-btn" :id = "index +'a'">
+                Support                
+              </button>
               <button id="view-btn" @click="toggleSupporters(idea)">View Supporters</button>
             </div>
           </div>

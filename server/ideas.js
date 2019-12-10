@@ -32,6 +32,8 @@ router.get('/', async (req, res) => {
 });
 
 
+
+
 router.post('/', async (req, res) => {
   const idea = new Idea({
     author: req.body.username,
@@ -65,11 +67,25 @@ router.post('/support', async (req, res) => {
   const currentIdea = await Idea.findOne({
       title: req.body.idea.title
     });
-  currentIdea.supporters.push(req.body.user);
-  currentIdea.save();
+  // Check duplicate supporter
+  let duplicate = false;
+  for(let i = 0; i < currentIdea.supporters.length; i++){
+    if(currentIdea.supporters[i].username == req.body.user.username){
+      duplicate = true;
+      break;
+    }
+  }
+  
+  if(duplicate == false){
+    currentIdea.supporters.push(req.body.user);
+    currentIdea.save();
+  }
+  
   return res.sendStatus(200);
   
 });
+
+
 
 router.get('/support/:id', async (req, res) => {
   try {

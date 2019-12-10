@@ -252,8 +252,13 @@ button.close:hover {
 
 
 
-#support-btn{
+.support-btn{
   background-color: #0066cc;
+  border-radius: 15px;
+  color: white;
+}
+.withdraw-btn{
+  background-color: #cc0000;
   border-radius: 15px;
   color: white;
 }

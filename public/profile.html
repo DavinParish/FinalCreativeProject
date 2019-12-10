@@ -49,7 +49,6 @@
       </div>
     </transition>
     <!--END OF SUPPORTERS POP UP-->
-    
     <div class="content" onLoad="getUsers()">
         <div v-if="user" id="personal-info">
           <h2>Personal Information: </h2>
@@ -94,6 +93,7 @@
             </div>
             <div class="delete">
               <button @click="deleteIdea(idea)" class="delete">Delete</button>
+              <!--<button v-if = "user != null" @click="supportIdea(idea)" class="support-btn">Support</button>-->
               <button id="view-btn" @click="toggleSupporters(idea)">View Supporters</button>
               <!--<button id="view-btn" @click="toggleSupporters(idea)">View Supporters</button>-->
             </div>
