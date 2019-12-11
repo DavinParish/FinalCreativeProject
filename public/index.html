@@ -12,10 +12,14 @@
 <body>
   <div id="app" @keydown.esc="closeForm">
     <div class="header">
-      <h1>Ideation</h1>
+      <h1>Ideation <i style="font-size: 12px; text-align:center">....  Where inspiration and production meet</i></h1>
         <p v-if="user">Welcome {{user.username}}<br><a href="#" @click="logout">Logout</a></p>
         <p v-else><a href="#" @click="toggleForm">Register or Login</a></p>
     </div>
+    <!--<div class = "header">-->
+       <!--<i style="font-size: 12px;">- Where inspiration and production meet</i></h1>-->
+    <!--</div>-->
+    
     <div class = "navbar">
       <div class = "navItem" id = "active"><a class = "nav-link" href="index.html">Home</a></div>
       <div class = "navItem" v-if = "user != null"><a class = "nav-link" href="profile.html">Profile</a></div>
@@ -91,7 +95,7 @@
     
     
     <div class="content">
-      <div class="recommended">
+      <div id="recommended" class = "content-box">
         <h2 v-if = "user != null">Ideas that fit your talents</h2>
         <div class="idea-list">
           <div v-for="idea, index in recommendedIdeas" >
@@ -123,8 +127,8 @@
         </div>
       </div>
       
-      <div class="idea-list">
-        <h2>All Ideas</h2>
+      <div id="idea-list" class = "content-box">
+        <h2>Other People's Ideas</h2>
         <div v-for="idea, index in filteredIdeas">
           <hr>
           <div class="idea-card">

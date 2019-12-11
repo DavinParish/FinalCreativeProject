@@ -144,7 +144,8 @@ button {
 }
 
 button {
-  background-color: #EE9828;
+  background-color: #40895a;
+  border-radius:15px;
   color: white;
 }
 
@@ -243,7 +244,7 @@ button.close:hover {
     height:20px;
     text-align: center;
     padding:0;
-    background-color: #cc0000;
+    background-color: #A24343;
     
 }
 
@@ -260,18 +261,18 @@ button.close:hover {
 
 
 .support-btn{
-  background-color: #0066cc;
+  background-color: #5D5D85;
   border-radius: 15px;
   color: white;
 }
 .withdraw-btn{
-  background-color: #cc0000;
+  background-color: #714343;
   border-radius: 15px;
   color: white;
 }
 
 #view-btn{
-  background-color: #0066cc;
+  background-color: #5D5D85;
   border-radius: 15px;
   color: white;
 }
@@ -293,7 +294,7 @@ button.close:hover {
 }
 .skill-tab{
   border-radius:30px;
-  background-color:#00ccff;
+  background-color:#8BA78B;
   height:20px;
   margin: 5px;
   padding: 2px;
@@ -322,4 +323,27 @@ button.close:hover {
 
 .error-message{
   color:red;
+}
+
+.content-box{
+  margin: 15px;
+  border-radius: 15px;
+  background-color: #ABABCA;
+  padding: 15px;
+}
+
+textarea{
+  border-radius: 15px;
+  padding: 5px;
+  
+}
+
+input{
+  border-radius:15px;
+  padding:5px;
+}
+a {
+    display: block;
+    width: 100px;
+    /*height: 50px;*/
 }

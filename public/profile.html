@@ -50,10 +50,11 @@
     </transition>
     <!--END OF SUPPORTERS POP UP-->
     <div class="content" onLoad="getUsers()">
-        <div v-if="user" id="personal-info">
+      
+        <div v-if="user" id="personal-info" class = content-box>
           <h2>Personal Information: </h2>
-          <p>{{user.username}}</p>
-          <p v-if="user.email">{{user.email}}</p>
+          <p>Username: {{user.username}}</p>
+          <p v-if="user.email">Email: {{user.email}}</p>
           <!--<input v-model="email">-->
           <!--<button @click="editEmail()" id = "view-btn">Save</button>-->
           
@@ -62,7 +63,7 @@
         <div id = "skillsBox" class = "content-box">
           <h2>Your Skills</h2>
             <ul>
-                <li v-for="skill in skills" class = "skill">
+                <li v-for="skill, index in skills" class = "skill" @click="toggleEdit(skill, 'skill' + index)" :id = "'skill' + index">
                     {{skill}}
                     <button class = "delete-skill-btn" type="submit" @click= "deleteSkill(skill)">x</button>
                 </li>

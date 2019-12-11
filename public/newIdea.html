@@ -23,6 +23,8 @@
         </div>
     
         <div class="content">
+          
+          <div class = "content-box">
           <!--@submit.prevent="addIdea"-->
             <form @submit.prevent>
                 <input v-model="addedTitle" placeholder="Title"></p>
@@ -42,7 +44,10 @@
                 <br/>
                 <button type="submit" @click="addIdea">Submit</button>
             </form>
-            
+            <p><i>Use the skills section to add the skills that you might not have but will be required for this project</i></p>
+            <p><i>This helps us connect you with people that might be good partners</i></p>
+          </div>
+          <div class = "content-box">  
           <div v-for="idea in tempIdeaList">
             <hr>
             <div class="idea-card">
@@ -61,6 +66,7 @@
                 <!--<p v-else><a href="#" @click="toggleForm">Register or Login</a></p>-->
               </div>
             </div>
+          </div>
           </div>
         </div>
 

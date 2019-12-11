@@ -26,6 +26,7 @@ var app = new Vue({
     recommendedIdeas: [],
     filteredIdeas: {},
     supported: false,
+    skillToEdit: String,
     
   },
   created() {
@@ -44,7 +45,18 @@ var app = new Vue({
   },
   
   methods: {
-    
+    toggleEdit(skill, id){
+      console.log(id);
+      this.skillToEdit = skill;
+      console.log(document.getElementById(id));
+      document.getElementById(id).innerHTML = "";
+      let inputNode = "<input v-model='skillToEdit'>";
+      let buttonNode = "<button class = 'add-skill-btn' type='submit' @click='EditSkill(skill)'>Save</button>"
+      
+      document.getElementById(id).appendChild(inputNode);
+      document.getElementById(id).appendChild(buttonNode);
+      
+    },
     async getFilteredIdeas() {
       console.log("GETTING FILTERED");
       await this.getIdeas();
