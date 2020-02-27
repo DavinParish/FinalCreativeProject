@@ -63,7 +63,9 @@
         <div id = "skillsBox" class = "content-box">
           <h2>Your Skills</h2>
             <ul>
-                <li v-for="skill, index in skills" class = "skill" @click="toggleEdit(skill, 'skill' + index)" :id = "'skill' + index">
+                <li v-for="skill, index in skills" class = "skill" :id = "'skill' + index">
+                    <input v-if="editing" v-model='skillToEdit'>
+                    <button v-if="editing"class = 'add-skill-btn' type='submit' @click="editSkill(skill, 'skill' + index)">Save</button>
                     {{skill}}
                     <button class = "delete-skill-btn" type="submit" @click= "deleteSkill(skill)">x</button>
                 </li>

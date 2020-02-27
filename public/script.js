@@ -27,6 +27,7 @@ var app = new Vue({
     filteredIdeas: {},
     supported: false,
     skillToEdit: String,
+    editing: false,
     
   },
   created() {
@@ -45,12 +46,40 @@ var app = new Vue({
   },
   
   methods: {
+    
+    async editSkill(skill, id) {
+        if (this.skillToEdit == "") {
+          // alert("Name must be filled out");
+          // document.getElementById("empty-skill-error").innerHTML = "Please fill out before submitting";
+          this.skillToEdit = skill;
+          return false;
+        }
+        // document.getElementById("empty-skill-error").innerHTML = "";
+        console.log("target skill: " + skill);
+        console.log("skill to edit: " + this.skillToEdit);
+        
+      try {
+        let response = await axios.put("/api/users/skill", {
+          skill: skill,
+          newskill: this.skillToEdit,
+          user: this.user,
+        });
+        
+        document.getElementById(id).innerHTML = this.skillToEdit;
+        this.editing = false;
+        this.getSkills();
+      } catch (error) {
+        console.log(error);
+      }
+      
+    },
     toggleEdit(skill, id){
       console.log(id);
       this.skillToEdit = skill;
-      console.log(document.getElementById(id));
+      // console.log(document.getElementById(id));
       document.getElementById(id).innerHTML = "";
-      let inputNode = "<input v-model='skillToEdit'>";
+      // let inputNode = document.createElement("input");     
+      // let inputNode = "<input v-model='skillToEdit'>";
       let buttonNode = "<button class = 'add-skill-btn' type='submit' @click='EditSkill(skill)'>Save</button>"
       
       document.getElementById(id).appendChild(inputNode);

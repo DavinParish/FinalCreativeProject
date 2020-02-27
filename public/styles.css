@@ -244,8 +244,8 @@ button.close:hover {
     height:20px;
     text-align: center;
     padding:0;
-    background-color: #A24343;
-    
+    background-color: #6C845D;
+    /*float: right;    */
 }
 
 .skill{

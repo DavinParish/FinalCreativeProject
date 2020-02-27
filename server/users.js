@@ -240,6 +240,18 @@ router.post('/editEmail', async (req, res) => {
   
 //   return res.send(user.email);
 // });
+// edit email
+router.put('/skill', async (req, res) => {
+  const currentUser = await User.findOne({
+      username: req.body.user,
+    });
+    
+  currentUser.email =  req.body.email; 
+  currentUser.save();
+  return res.sendStatus(200);
+  
+});
+
 
 // delete a user
 router.delete('/:id', auth.verifyToken, async (req, res) => {
